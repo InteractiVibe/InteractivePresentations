@@ -1,1331 +1,263 @@
-/* General Styles */
-:root {
-    --primary-pink: #FF66B2;
-    --primary-blue: #66B2FF;
-    --dark-purple: #4A004A; /* A darker shade for text/elements */
-    --light-grey: #F8F8F8; /* Lighter background */
-    --dark-grey-text: #333;
-    --white: #FFFFFF;
-    --green-accent: #90EE90; /* Initial green for success block */
-    --soft-green-bg: #E6FFE6; /* Softer, lighter green for success block */
-    --success-border-color: #5cb85c; /* Darker green for borders/accents in success */
-    --accent-yellow: #FFD700; /* New accent color for highlights */
-    --soft-blue: #E0F2F7; /* A softer blue for some backgrounds */
-    --checklist-number-bg: #87CEEB; /* Sky blue for checklist numbers */
-    --checklist-number-text: #FFFFFF;
+const stepCards = document.querySelectorAll('.step-cardd');
+        const infoBlock = document.getElementById('infoBlock');
 
-    /* Specific colors from new design */
-    --light-green-yellow: #d3fc5d;
-    --button-blue: #5a57e2;
-
-    /* Hover effect colors */
-    --hover-bg-dark: var(--dark-purple);
-    --hover-text-light: var(--white);
-    --hover-accent-light: var(--primary-pink); /* Use pink for hover accent */
-}
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-html {
-    scroll-behavior: smooth; /* Smooth scrolling for anchor links */
-}
-
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-    line-height: 1.6;
-    color: var(--dark-grey-text);
-    background-color: var(--light-grey);
-}
-/* --- Стили для этапов (сетка 4x2) --- */
-        .steps-container {
-            display: flex;
-            justify-content: center; /* Центрируем ряды этапов */
-            align-items: stretch; /* Выравниваем по верху */
-            flex-wrap: wrap; /* Разрешаем перенос на новую строку */
-            margin-bottom: 30px;
-            padding: 20px 0;
-            overflow-x: hidden; /* Отключаем горизонтальную прокрутку */
-        }
-
-        .step-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            /* Распределяем элементы по 4 в ряд */
-            flex-basis: calc(25% - 40px); /* 4 элемента в ряд, учитывая margin */
-            margin: 10px 20px; /* Отступы между карточками */
-            min-width: 200px; /* Минимальная ширина для карточки */
-            max-width: 250px; /* Максимальная ширина для карточки */
-            position: relative; /* Сохраняем, если нужны другие позиционированные элементы */
-        }
-        
-        .step-cardd {
-            background-color: white; /* Оригинальный цвет из isp.txt */
-            color: black; /* Оригинальный цвет текста из isp.txt */
-            border: 2px solid #ff66b2; /* Граница в цвет фона */
-            border-radius: 20px; /* Оригинальный радиус из isp.txt */
-            padding: 15px 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            flex-grow: 1; /* Позволяет карточке растягиваться в рамках step-wrapper */
-            flex-shrink: 1;
-            height:100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            width: 100%; /* Занимает всю доступную ширину step-wrapper */
-        }
-
-        .step-cardd:hover {
-            border-color: #ffcae5; /* Немного темнее при наведении */
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-            transform: translateY(-3px);
-        }
-
-        .step-cardd.active {
-            background-color: #ffcae5; /* Цвет подсветки, близкий к оригинальному */
-            border-color: #ffcae5;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
-            transform: translateY(-2px);
-            color: black;
-        }
-
-        .step-cardd h3 {
-            margin-top: 0;
-            margin-bottom: 8px;
-            font-size: 1.2em;
-            font-weight: 600;
-        }
-
-        .step-cardd p {
-            font-size: 0.85em;
-            color: #444; /* Чтобы текст был читаемым на светлом фоне */
-            margin: 0;
-        }
-
-        .step-cardd.active p {
-            color: #333; /* Цвет текста для активной карточки */
-        }
-
-        /* --- Полностью убираем все стрелки --- */
-        .arrow-horizontal, .arrow-vertical,
-        .step-wrapper::before, .step-wrapper::after {
-            display: none !important;
-        }
-
-        /* --- Стили для информационного блока --- */
-        .info-block-wrapper {
-            background-color: white;
-            border: 3px dotted #ff66b2;
-            border-radius: 20px;
-            padding: 20px;
-            margin-top: -20px;
-            overflow: hidden; /* Скрываем содержимое, если высота 0 */
-            flex-grow: 1; /* Позволяет блоку занимать оставшееся пространство */
-        }
-
-        .info-block {
-            opacity: 0;
-            transform: translateY(20px);
-            height: 0; /* Изначально скрыто */
-            pointer-events: none; /* Отключаем события мыши, когда скрыто */
-            transition: opacity 0.5s ease, transform 0.5s ease, height 0.5s ease;
-        }
-
-        .info-block.active {
-            opacity: 1;
-            transform: translateY(0);
-            height: auto; /* Позволяем высоте подстроиться под содержимое */
-            pointer-events: auto; /* Включаем события мыши */
-        }
-
-        .info-block h2 {
-            color: #007bff;
-            margin-top: 0;
-            font-size: 1.8em;
-            margin-bottom: 15px;
-            text-align: left; /* Заголовок внутри блока по левому краю */
-        }
-
-        .info-block p {
-            line-height: 1.6;
-            margin-bottom: 10px;
-        }
-
-        /* Стили для содержимого, извлеченного из isp.txt */
-        .info-content-original h3 {
-            font-size: 1.5em;
-            color: black;
-            background-color: #ffcae5; /* Оригинальный розовый фон */
-            padding: 10px 15px;
-            border-radius: 10px;
-            margin-top: 20px;
-        }
-
-        .info-content-original p {
-            font-size: 1em;
-            margin-top: 10px;
-            margin-bottom: 5px;
-            color: #333;
-        }
-        .info-content-original p b {
-            font-weight: 700;
-        }
-
-        .info-content-original ol, .info-content-original ul {
-            padding-left: 25px;
-            margin-top: 0;
-            margin-bottom: 15px;
-            list-style-position: outside;
-        }
-        .info-content-original ol li, .info-content-original ul li {
-            margin-bottom: 5px;
-            color: #333;
-        }
-
-        .info-content-original .example-box {
-            border:3px solid #ffcae5; /* Оригинальный светло-розовый фон */
-            border-radius: 20px; /* Оригинальный радиус из isp.txt */
-	    line-height:1.5;
-            padding: 10px;
-            color: black;
-            margin-top: 15px;
-            margin-bottom: 15px;
-        }
-        .info-content-original .example-box p {
-            margin-top: 0;
-            font-weight: bold;
-            font-size: 1em;
-        }
-        .info-content-original .example-box ul {
-            padding-left: 15px;
-            margin-top: -15px;
-            list-style-type: disc; /* Круглые маркеры для примеров */
-        }
-        .info-content-original .example-box ul li {
-            color: black;
-        }
-
-
-        /* Адаптивность для мобильных устройств */
-        @media (max-width: 768px) {
-
-
-            .steps-container {
-                flex-direction: column; /* Этапы выстраиваются вертикально */
-                align-items: flex-start; /* Выравнивание по левому краю */
-                padding: 10px 0;
+        // Данные для каждого этапа, извлеченные из isp.txt
+        const stepContents = {
+            1: {
+                shortTitle: 'Сопровождение объяснения',
+                shortText: 'Визуализация и структурирование материала.',
+                fullContent: `
+                    <h3>ПРЕЗЕНТАЦИЯ КАК СОПРОВОЖДЕНИЕ ОБЪЯСНЕНИЯ УЧИТЕЛЯ ПРИ ИЗУЧЕНИИ НОВОГО МАТЕРИАЛА</h3>
+                    <p><b>Цель:</b> визуализировать и структурировать объяснение преподавателя (интерактивная презентация как центральный дидактический инструмент).<br><b>Особенности разработки:</b></p>
+                    <ol>
+                        <li>Используйте меньше текста и максимум визуализации – схемы, анимации, инфографику.</li>
+                        <li>Заменяйте готовые ответы проблемными вопросами.</li>
+                        <li>Приводите реальные примеры из жизни, показывая связь теории с практикой.</li>
+                        <li>Используйте знакомые цифровые паттерны (стиль, персонажей, примеры из популярных игр и кино).</li>
+                    </ol>
+                    <div class="example-box">
+                        <p><b> Примеры:</b></p><br>
+                        <ul>
+                            <li>объяснение принципов работы сети Интернет через интерактивную модель с поэтапным «включением» компонентов;</li>
+                            <li>при обсуждении сети Интернет провести «суд над интернетом», организовать дебаты о пользе/вреде сети с всплывающими фактами при наведении на «улики» и голосованием учащихся и вариантами аргументов для каждой стороны.</li>
+                        </ul>
+                    </div>
+                `
+            },
+            2: {
+                shortTitle: 'Информационно-обучающее пособие',
+                shortText: 'Самостоятельное изучение темы учащимися.',
+                fullContent: `
+                    <h3>ИНФОРМАЦИОННО-ОБУЧАЮЩЕЕ ПОСОБИЕ</h3>
+                    <p><b>Цель:</b> самостоятельное изучение темы учащимися.<br><b>Особенности разработки:</b></p>
+                    <ol>
+                        <li>Полнота и системность изложения.</li>
+                        <li>Разветвленная навигация.</li>
+                        <li>Встроенные тренажеры и симуляторы.</li>
+                        <li>Глоссарий с всплывающими подсказками.</li>
+                        <li>Альтернативные объяснения сложных моментов.</li>
+                        <li>Система самопроверки на каждом этапе.</li>
+                    </ol>
+                    <div class="example-box">
+                        <p><b> Примеры:</b></p><br>
+                        <ul>
+                            <li>история электронных вычислительных машин через интерактивную хронологию от перфокарт до голосовых помощников с мини-квестами (например, «Найди предка»), вопросами и заданиями для самопроверки и размышления;</li>
+                            <li>интерактивный учебник по теме «Сетевой этикет» с основными правилами, ситуативными кейсами, анимациями, видеофрагментами и тренажерами для самопроверки.</li>
+                        </ul>
+                    </div>
+                `
+            },
+            3: {
+                shortTitle: 'Внеурочное занятие',
+                shortText: 'Углубление знаний в неформальной обстановке.',
+                fullContent: `
+                    <h3>ПРЕЗЕНТАЦИЯ ДЛЯ ВНЕУРОЧНОГО ЗАНЯТИЯ</h3>
+                    <p><b>Цель:</b> углубление знаний в неформальной обстановке.<br><b>Особенности разработки:</b></p>
+                    <ol>
+                        <li>Игровой формат.</li>
+                        <li>Элементы соревнования.</li>
+                        <li>Творческие задания.</li>
+                        <li>Связь с реальными ИТ-профессиями.</li>
+                        <li>Возможность групповой работы.</li>
+                        <li>Интеграция с внешними ресурсами.</li>
+                    </ol>
+                    <div class="example-box">
+                        <p><b> Примеры:</b></p><br>
+                        <ul>
+                            <li>квест «Кибердетектив» с решением задач по криптографии и информационной безопасности;</li>
+                            <li>групповая или индивидуальная работа учеников по созданию слайдов с мемами по темам из информатики с пояснением использованных терминов (можно предусмотреть шаблоны с IT-атрибутикой и библиотекой терминов), в результате провести интерактивное голосование за лучшую работу.</li>
+                        </ul>
+                    </div>
+                `
+            },
+            4: {
+                shortTitle: 'Постановка темы',
+                shortText: 'Мотивация и обозначение проблемного поля.',
+                fullContent: `
+                    <h3>ПРЕЗЕНТАЦИЯ ДЛЯ ПОСТАНОВКИ ТЕМЫ</h3>
+                    <p><b>Цель:</b> замотивировать учащихся, вызвать интерес к новой теме, обозначить проблемное поле.<br><b>Особенности разработки:</b></p>
+                    <ol>
+                        <li>Использование провокационных вопросов, парадоксов.</li>
+                        <li>Включение коротких видеороликов или анимаций, демонстрирующих практическую значимость темы.</li>
+                        <li>Интерактивные опросы «Что вы знаете о..?».</li>
+                        <li>Геймифицированные элементы (например, «разгадайте код», чтобы узнать тему урока).</li>
+                        <li>Яркие визуальные метафоры, связанные с темой.</li>
+                    </ol>
+                    <div class="example-box">
+                        <p><b> Примеры:</b></p><br>
+                        <ul>
+                            <li>перед переходом к теме «Методы защиты информации» разработать мини-квест, где ученики попадают в роль следователей, расследующих кибератаку, с поиском «улик» (файлы журналов, подозрительные IP); предусмотреть анимацию атаки на сервер при неправильном выборе и голосование «Кто хакер?» с визуализацией результатов;</li>
+                            <li>при изучении темы «Алгоритмы» можно начать с интерактивного квеста, где нужно «спасти робота», выстроив простейшую последовательность команд.</li>
+                        </ul>
+                    </div>
+                `
+            },
+            5: {
+                shortTitle: 'Актуализация знаний',
+                shortText: 'Систематизация ранее изученного материала.',
+                fullContent: `
+                    <h3>ПРЕЗЕНТАЦИЯ ДЛЯ АКТУАЛИЗАЦИИ ЗНАНИЙ</h3>
+                    <p><b>Цель:</b> вспомнить и систематизировать ранее изученный материал, необходимый для освоения новой темы (кратковременное, но интенсивное взаимодействие с материалом, стимулирующее познавательную активность учащихся).<br><b>Особенности разработки:</b></p>
+                    <ol>
+                        <li>Интерактивные схемы «Вспомните и дополните».</li>
+                        <li>Короткие тесты с автоматической проверкой или мини-опросы с мгновенной визуализацией результатов.</li>
+                        <li>Создание проблемной ситуации (например, демонстрация алгоритма с преднамеренной ошибкой).</li>
+                        <li>Интеллект-карты с возможностью коллективного заполнения.</li>
+                        <li>Система «горячих зон» на изображениях.</li>
+                    </ol>
+                    <div class="example-box">
+                        <p><b> Примеры:</b></p><br>
+                        <ul>
+                            <li>для повторения архитектуры ПК создать конструктор из компонентов компьютера – учащиеся перемещают детали в корпус, если сборка правильная, то ПК запускается, а при ошибке появляются комичные анимации (например, дым из блока питания); можно предусмотреть подсказки о функциях компонентов;</li>
+                            <li>после изучения языков программирования – интерактивная временная шкала развития языков, где нужно расставить основные вехи.</li>
+                        </ul>
+                    </div>
+                `
+            },
+            6: {
+                shortTitle: 'Закрепление материала',
+                shortText: 'Отработка и применение полученных знаний.',
+                fullContent: `
+                    <h3>ПРЕЗЕНТАЦИЯ ДЛЯ ЗАКРЕПЛЕНИЯ МАТЕРИАЛА</h3>
+                    <p><b>Цель:</b> отработка и применение полученных знаний (интерактивная презентация как инструмент практической деятельности).<br><b>Особенности разработки:</b></p>
+                    <ol>
+                        <li>Практико-ориентированные кейсы.</li>
+                        <li>Интерактивные упражнения с возрастающей сложностью.</li>
+                        <li>Система подсказок и «стратегий решения».</li>
+                        <li>Возможность многократного прохождения.</li>
+                        <li>Аналитика ошибок.</li>
+                    </ol>
+                    <div class="example-box">
+                        <p><b> Примеры:</b></p><br>
+                        <ul>
+                            <li>соревновательная викторина <a href="Своя игра.pptx" style="text-decoration:none; color:#ff66b2;border: 1px solid #ff66b2;border-radius:5px" title="Скачать">«Своя игра»</a> с различными категориями вопросов, которые ранжированы по уровню сложности (универсальный формат, применимый к различным темам курса информатики) – ученики объединяются в команды, выполняют задания за ограниченное количество времени и получают баллы за правильные решения;</li>
+                            <li>образовательная игра-квест <a href="Двоичная аномалия.pptx" style="text-decoration:none; color:#ff66b2;border: 1px solid #ff66b2;border-radius:5px" title="Скачать">«Двоичная аномалия»</a> на закрепление полученных знаний по теме «Системы счисления» – учащийся принимает на себя роль хакера из подпольного сопротивления, которому предстоит выполнить серию заданий на перевод между двоичной и десятичной системами счисления, чтобы взломать защитные механизмы корпорации-антагониста; ответы ученика приводят к сюжетным изменениям и разным концовкам.</li>
+			</ul>
+                    </div>
+                `
+            },
+            7: {
+                shortTitle: 'Контроль знаний',
+                shortText: 'Проверка уровня усвоения материала.',
+                fullContent: `
+                    <h3>ПРЕЗЕНТАЦИЯ ДЛЯ КОНТРОЛЯ ЗНАНИЙ</h3>
+                    <p><b>Цель:</b> проверка уровня усвоения материала.<br><b>Особенности разработки:</b></p>
+                    <ol>
+                        <li>Разнообразные типы заданий (выбор, сопоставление и т.п.).</li>
+                        <li>Таймер и ограничения времени.</li>
+                        <li>Система оценки с критериями.</li>
+                        <li>Защита от списывания.</li>
+                        <li>Индивидуальные варианты.</li>
+                    </ol>
+                    <div class="example-box">
+                        <p><b> Примеры:</b></p><br>
+                        <ul>
+                            <li>тест по теме «Кодирование информации» без возможности произвольного перехода по слайдам и с разнообразными вариантами;</li>
+                            <li>ученики должны дешифровать переписку; предусмотреть уникальные сценарии и концовки истории с соответствующим оцениванием.</li>
+                        </ul>
+                    </div>
+                `
+            },
+            8: {
+                shortTitle: 'Рефлексия',
+                shortText: 'Осмысление и самоанализ.',
+                fullContent: `
+                    <h3>ПРЕЗЕНТАЦИЯ ДЛЯ РЕФЛЕКСИИ</h3>
+                    <p><b>Цель:</b> осмысление изученного материала, самоанализ и оценка сформированности знаний через интерактивные формы взаимодействия.<br><b>Особенности разработки:</b></p>
+                    <ol>
+                        <li>Эмоционально-оценочные элементы (смайлы, шкалы, цветовые маркеры).</li>
+                        <li>Визуализация прогресса (графики, диаграммы, «уровни освоения»).</li>
+                        <li>Геймифицированные формы обратной связи (баллы, рейтинги).</li>
+                        <li>Быстрые рефлексивные вопросы с вариантами ответов.</li>
+                    </ol>
+                    <div class="example-box">
+                        <p><b> Примеры:</b></p><br>
+                        <ul>
+                            <li>«Цветовая самооценка» – ученик выбирает цвет: зеленый – «Все понял, могу объяснить», желтый – «Есть небольшие вопросы», красный – «Нужно повторить»; после выбора предлагаются подсказки, что можно сделать, чтобы улучшить результат;</li>
+                            <li>«Ассоциации» – на экране выводится термин, например «алгоритм», ведется анимированный таймер (на 60 секунд), ученики по цепочке говорят ассоциации с понятием (определяется, какие связи с темой запомнились), по истечению таймера появляются анимации возможных ассоциаций;</li>
+                            <li>«Шкала понимания» – ученики отмечают на шкале от 1 до 10, насколько хорошо поняли тему (в индивидуальном порядке или через взаимодействие с интерактивной доской) их оценка сопровождается подсказками («1-3» – «Нужно повторить базовые понятия», «4-7» – «Есть пробелы, но общая картина ясна», «8-10» – «Могу объяснить другим!») и анимированными либо звуковыми реакциями; после голосования предлагаются персонализированные задания для закрепления.</li>
+                        </ul>
+                    </div>
+                `
             }
+        };
 
-            .step-wrapper {
-                width: 100%;
-                max-width: 100%;
-                margin: 10px 0;
-                padding: 0;
-                justify-content: flex-start;
-            }
+        // Функция для отображения информации об этапе
+        function showStepInfo(stepNumber) {
+            const content = stepContents[stepNumber];
+            if (content) {
+                // Добавляем класс для стилизации оригинального контента
+                infoBlock.innerHTML = `<div class="info-content-original">${content.fullContent}</div>`;
+                
+                // Удаляем класс 'active' у всех карточек
+                stepCards.forEach(card => card.classList.remove('active'));
+                
+                // Добавляем класс 'active' к текущей карточке
+                document.querySelector(`.step-cardd[data-step="${stepNumber}"]`).classList.add('active');
 
-            .step-cardd {
-                width: 100%;
-                min-width: unset;
-                padding: 10px 15px;
-                min-height: 80px;
-            }
-
-            .step-cardd h3 {
-                font-size: 1.1em;
-            }
-            .step-cardd p {
-                font-size: 0.8em;
-            }
-
-            .info-block-wrapper {
-                padding: 15px;
-                margin-top: 20px;
-            }
-            .info-block h2 {
-                font-size: 1.5em;
+                // Показываем блок информации, добавляя класс 'active'
+                infoBlock.classList.add('active');
+            } else {
+                infoBlock.innerHTML = '<h2>Информация не найдена</h2><p>Выберите этап, чтобы узнать подробности.</p>';
+                infoBlock.classList.remove('active'); // Скрываем блок, если нет информации
             }
         }
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
 
-h1, h2 {
-    color: var(--dark-purple);
-    font-weight: 700;
-    text-transform: uppercase;
-}
-h3, p, strong, ul li, ol li {
-    text-transform: none;
-}
-
-/* Header - Collapsible Navigation */
-.header {
-    background-color: var(--primary-pink); /* Default pink background */
-    padding: 15px 0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    transition: padding 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.header.scrolled {
-    padding: 8px 0;
-    background-color: var(--light-green-yellow); /* Scrolled background */
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-}
-
-.header .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: nowrap; /* Ensure they stay on one line */
-}
-
-/* Site Title Styling (Header) */
-.header .site-title a {
-    font-size: 20px; /* Adjust default to fit on one line */
-    font-weight: bold;
-    color: var(--dark-purple); /* Text color for title */
-    text-decoration: none;
-    transition: font-size 0.3s ease, color 0.3s ease, background-color 0.3s ease, border-radius 0.3s ease;
-    text-transform: uppercase;
-    background-color: var(--light-green-yellow); /* Background for title */
-    padding: 8px 15px;
-    border-radius: 15px;
-    white-space: nowrap; /* Prevent wrapping */
-    margin-right: 20px; /* Space between title and nav */
-}
-
-.header.scrolled .site-title a {
-    font-size: 18px; /* Slightly smaller when scrolled */
-    color: var(--dark-purple);
-    background-color: transparent; /* No background when scrolled */
-    border-radius: 0;
-    padding: 0;
-    margin-right: 15px;
-}
-.header.scrolled .site-title a:hover {
-    color: var(--primary-pink); /* Hover color for scrolled title */
-}
-
-.header .nav ul {
-    list-style: none;
-    display: flex;
-    flex-wrap: nowrap; /* Keep nav links on one line */
-    overflow-x: auto; /* Allow horizontal scrolling if too many links */
-    -webkit-overflow-scrolling: touch; /* For smooth scrolling on iOS */
-    padding-bottom: 5px; /* Space for scrollbar on some systems */
-}
-
-.header .nav ul li {
-    margin-left: 20px; /* Slightly reduced margin */
-    flex-shrink: 0; /* Prevent links from shrinking */
-}
-
-.header .nav ul li a {
-    text-decoration: none;
-    color: var(--white); /* White nav links by default */
-    font-weight: 500;
-    transition: color 0.3s ease, border-bottom 0.3s ease, font-size 0.3s ease;
-    padding-bottom: 3px;
-    text-transform: none;
-    white-space: nowrap; /* Prevent wrapping */
-}
-
-.header.scrolled .nav ul li a {
-    color: var(--dark-purple); /* Dark purple nav links when scrolled */
-    font-size: 0.9em;
-}
-
-.header .nav ul li a:hover {
-    color: var(--primary-blue);
-    border-bottom: 2px solid var(--primary-blue);
-}
-.header.scrolled .nav ul li a:hover {
-    color: var(--primary-pink);
-    border-bottom-color: var(--primary-pink);
-}
-
-/* Hero Section */
-.hero {
-    background: linear-gradient(145deg, var(--primary-pink) 0%, #FFB2E6 100%);
-    color: var(--white);
-    padding: 80px 0 120px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    border-bottom-left-radius: 60px;
-    border-bottom-right-radius: 60px;
-}
-.hero2 {
-    background: linear-gradient(145deg, var(--primary-pink) 0%, #FFB2E6 100%);
-    color: var(--white);
-    padding: 80px 0 120px;
-    margin-top:50px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    border-top-left-radius: 60px;
-    border-top-right-radius: 60px;}
-/* Graphic elements for Hero section - Enhanced */
-.hero::before,
-.hero::after,
-.hero .container::before,
-.hero .container::after {
-    content: '';
-    position: absolute;
-    z-index: 0;
-    opacity: 0.2;
-}
-
-/* Large blurred blobs */
-.hero::before {
-    background-color: var(--soft-blue);
-    width: 400px; height: 400px;
-    top: -100px; left: -150px;
-    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
-    filter: blur(30px);
-    animation: float1 15s infinite ease-in-out;
-}
-
-.hero::after {
-    background-color: var(--accent-yellow);
-    width: 350px; height: 350px;
-    bottom: -100px; right: -120px;
-    border-radius: 30% 70% 50% 50% / 60% 40% 60% 40%;
-    filter: blur(30px);
-    animation: float2 18s infinite ease-in-out;
-}
-
-/* Dashed circles */
-.hero .container::before {
-    width: 180px; height: 180px;
-    top: 50px; right: 100px;
-    border-radius: 50%;
-    border: 3px dashed rgba(255, 255, 255, 0.4);
-    background: none;
-    animation: rotate 20s infinite linear;
-}
-
-.hero .container::after {
-    width: 120px; height: 120px;
-    bottom: 80px; left: 80px;
-    border-radius: 50%;
-    border: 2px dotted rgba(255, 255, 255, 0.5);
-    background: none;
-    animation: rotateReverse 15s infinite linear;
-}
-
-/* Removed arrow inside hero-intro-card: .hero .container .hero-intro-card::before { ... } */
-
-/* Keyframe animations */
-@keyframes float1 {
-    0% { transform: translate(0, 0) rotate(0deg); }
-    50% { transform: translate(20px, 30px) rotate(10deg); }
-    100% { transform: translate(0, 0) rotate(0deg); }
-}
-
-@keyframes float2 {
-    0% { transform: translate(0, 0) rotate(0deg); }
-    50% { transform: translate(-20px, -30px) rotate(-10deg); }
-    100% { transform: translate(0, 0) rotate(0deg); }
-}
-
-@keyframes rotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-@keyframes rotateReverse {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(-360deg); }
-}
-
-.hero h1 {
-    font-size: 3.8em;
-    margin-bottom: 15px;
-    font-weight: 900;
-    line-height: 1.1;
-    text-shadow: 2px 2px 6px rgba(0,0,0,0.2);
-    color: var(--white);
-    position: relative;
-    z-index: 1;
-}
-
-/* New style for hero subtitle */
-.hero-subtitle-box {
-    background-color: transparent; /* Transparent fill */
-    border: 2px dashed var(--light-green-yellow); /* Dashed border */
-    border-radius: 20px; /* Rounded corners */
-    padding: 10px 25px; /* Padding inside the box */
-    display: inline-block; /* To make padding/border apply correctly */
-    font-size: 1.8em;
-    margin-bottom: 50px;
-    opacity: 0.95;
-    font-weight: 300;
-    color: var(--white);
-    position: relative;
-    z-index: 1;
-}
-
-.hero-intro-card {
-    background-color: var(--white);
-    padding: 40px;
-    border-radius: 30px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-    text-align: center;
-    width: 90%;
-    max-width: 900px;
-    margin: 0 auto;
-    position: relative;
-    z-index: 1;
-    transform: translateY(60px) rotate(0deg); /* No tilt */
-    transition: transform 0.4s ease-in-out;
-}
-
-.hero-intro-card:hover {
-    transform: translateY(60px) rotate(0deg); /* No tilt on hover */
-}
-
-.hero-intro-card h3 {
-    color: var(--dark-purple);
-    font-size: 1.8em;
-    margin-bottom: 20px;
-}
-
-.hero-intro-card p {
-    color: var(--dark-grey-text);
-    font-size: 1.1em;
-    line-height: 1.6;
-}
-
-.hero-intro-card p span {
-    font-weight: bold;
-    color: var(--primary-pink);
-    font-style: italic;
-}
-.hero-intro-card2 {
-    background-color: var(--white);
-    padding: 40px;
-    border-radius: 30px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-    text-align: center;
-    width: 90%;
-    max-width: 900px;
-    margin: auto;
-margin-bottom:-70px;
-margin-top:-90px;
-    position: relative;
-    z-index: 1;
-    transform: translateY(60px) rotate(0deg); /* No tilt */
-    transition: transform 0.4s ease-in-out;
-}
-.hero-intro-card2:hover {
-    transform: translateY(60px) rotate(0deg); /* No tilt on hover */
-}
-
-.hero-intro-card2 h3 {
-    color: var(--dark-purple);
-    font-size: 1.8em;
-    margin-bottom: 20px;
-}
-
-.hero-intro-card2 p {
-    color: var(--dark-grey-text);
-    font-size: 1.1em;
-    line-height: 1.6;
-}
-
-.hero-intro-card2 p span {
-    font-weight: bold;
-    color: var(--primary-pink);
-    font-style: italic;
-}
-
-.call-to-action-block {
-    margin-top: 20px;
-    padding-top: 15px;
-    border-top: 1px dotted rgba(0,0,0,0.2);
-}
-
-.call-to-action-block p {
-    font-size: 1.2em;
-    margin-bottom: 25px;
-    font-weight: 500;
-}
-
-.go-button {
-    background-color: var(--dark-purple); /* New button color */
-    color: var(--white);
-    padding: 15px 30px;
-    border-radius: 30px;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 1.1em;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    display: inline-block;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-}
-
-.go-button:hover {
-    background-color: #ffff81; /* Slightly darker blue on hover */
-    transform: translateY(-3px);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
-    color: var(--dark-purple);
-}
-
-/* Content Sections */
-.content-section {
-    padding: 60px 0;
-    background-color: var(--white);
-    margin-top: 40px;
-    border-radius: 20px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-}
-
-.content-section:nth-of-type(odd) {
-    background-color: var(--light-grey);
-}
-
-.content-section h2 {
-    text-align: center;
-    font-size: 2.8em;
-    margin-bottom: 50px;
-    position: relative;
-}
-
-.content-section h2::after {
-    content: '';
-    display: block;
-    width: 80px;
-    height: 5px;
-    background: linear-gradient(to right, var(--primary-pink), var(--primary-blue));
-    margin: 20px auto 0;
-    border-radius: 3px;
-}
-
-/* Hover effect for specific blocks */
-.hover-effect {
-    transition: background-color 0.4s ease, color 0.4s ease, transform 0.3s ease, box-shadow 0.3s ease, border-color 0.4s ease;
-}
-
-.hover-effect h3,
-.hover-effect p,
-.hover-effect .icon,
-.hover-effect strong {
-    transition: color 0.4s ease;
-}
-
-/* Principles Section - Accentuated */
-.principles.accent-section {
-    padding: 80px 0; /* More vertical space */
-    background-color: #ffffe7 ; /* Gradient background */
-    margin-top: 60px;
-    border-radius: 40px; /* More rounded corners */
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2); /* Stronger shadow */
-    color: var(--deep-purple); /* White text */
-}
-
-.principles.accent-section h2 {
-    font-size: 2.8em; /* Larger heading */
-    color: var(--dark-purple);
-   
-}
-.principles.accent-section h2::after {
-    background: linear-gradient(to right, var(--primary-pink), var(--primary-blue)); /* Accent line for header */
-}
-
-.principle-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
-    text-align: center;
-}
-
-.principle-item {
-    background-color: var(--white); /* Делаем фон белым */
-    color: var(--dark-purple); /* Делаем текст deep purple */
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
-}
-
-.principle-item h3 {
-    font-size: 1.3em; /* Увеличиваем размер заголовка */
-    margin-bottom: 10px;
-}
-
-.principle-item p {
-    font-size: 1.1em; /* Увеличиваем размер текста */
-    line-height: 1.6;
-}
-.principle-item:hover {
-     /* More opaque on hover */
-    transform: translateY(-8px);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.15);
-}
-.principle-item:hover h3,
-.principle-item:hover p,
-.principle-item:hover .icon {
-     /* Keep text white on hover */
-}
-
-/* Techniques Section - New Design */
-.techniques.new-design {
-    background-color: white;
-}
-.techniques-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); /* Adjust min-width */
-    gap: 30px;
-}
-
-.technique-box {
-    padding: 30px;
-    border-radius: 20px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    color: var(--white);
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-
-.technique-box.box-blue { background-color: #ffff81; }
-.technique-box.box-pink { background-color: #d8ff81; }
-.technique-box.box-green { background-color: var(--green-accent); color: var(--dark-purple); } /* Green box needs dark text */
-.technique-box.box-yellow { background-color: var(--accent-yellow); color: var(--dark-purple); } /* Yellow box needs dark text */
-
-.technique-box h3 {
-    color: var(--white); /* Default for most boxes */
-    font-size: 1.6em;
-    margin-bottom: 15px;
-    z-index: 1; /* Above pseudo-element */
-}
-.technique-box.box-green h3,
-.technique-box.box-yellow h3 {
-    color: var(--dark-purple); /* Override for light backgrounds */
-}
-
-.technique-box ul {
-    list-style: none;
-    padding-left: 0;
-    margin-bottom: 0;
-    color: black;
-    z-index: 1;
-}
-.technique-box.box-green ul,
-.technique-box.box-yellow ul {
-    color: var(--dark-grey-text); /* Override for light backgrounds */
-}
-
-.technique-box ul li {
-    margin-bottom: 8px;
-    font-size: 1em;
-}
-.technique-box ul li:last-child {
-    margin-bottom: 0;
-}
-
-.technique-box:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 25px rgba(0,0,0,0.2);
-}
-
-/* Structure Section - No Numbers, Brighter */
-.structure-steps {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
-}
-
-.step-card {
-    background-color: white !important; /* используем !important для переопределения inline-стилей */
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    transition: transform 0.3s ease;
-    min-height: 220px; /* Adjust as needed */
-    position: relative; /* For the number positioning */
-    border: 2px dashed; /* Добавляем пунктирную обводку */
-    /* Цвет обводки будет установлен для каждого блока отдельно через inline-стили */
-}
-
-.step-card h3, .step-card p {
-    color: black; /* Ensure text is white */
-}
-
-/* Bright background colors for step cards */
-.step-card.bright-bg-1 { background-color: #FF8C00; border-color: #FF8C00 } /* Dark Orange */
-.step-card.bright-bg-2 { background-color: #00BFFF; border-color: #00BFFF} /* Deep Sky Blue */
-.step-card.bright-bg-3 { background-color: #FF1493; border-color: #FF1493} /* Deep Pink */
-.step-card.bright-bg-4 { background-color: #32CD32; border-color: #32CD32} /* Lime Green */
-
-.step-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-}
-
-/* Removed .step-number styling */
-
-/* New Section: Practical Recommendations */
-.recommendations {
-    background-color: var(--white); /* Or any preferred background */
-    padding: 60px 0;
-}
-
-.recommendations-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
-}
-
-.recommendation-item {
-    padding: 30px;
-    border-radius: 20px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    color: var(--white); /* Default text color for dark backgrounds */
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.recommendation-item h3 {
-    font-size: 1.5em;
-    margin-bottom: 15px;
-    color: inherit; /* Inherit color from parent */
-}
-
-.recommendation-item p {
-    font-size: 1em;
-    margin-bottom: 15px;
-    color: inherit;
-}
-
-.recommendation-item ul {
-    list-style: none;
-    padding-left: 0;
-}
-
-.recommendation-item ul li {
-    position: relative;
-    padding-left: 20px;
-    margin-bottom: 8px;
-    font-size: 0.95em;
-    color: inherit;
-}
-
-.recommendation-item ul li::before {
-    content: '•'; /* Simple bullet point */
-    position: absolute;
-    left: 0;
-    color: inherit;
-    font-weight: bold;
-}
-
-/* Specific background colors for recommendation items, mimicking image */
-.rec-bg-1 { background-color: #f28ea2; } /* Example: Blue */
-.rec-bg-2 { background-color: #ca8ef2; } /* Example: Pink */
-.rec-bg-3 { background-color: #8ecaf2; color: var(--dark-purple); } /* Light background needs dark text */
-.rec-bg-4 { background-color: #8ef2a2; color: var(--dark-purple); } /* Light background needs dark text */
-.rec-bg-5 { background-color:#ffa67e; } /* Purple */
-.rec-bg-6 { background-color: #8bf2d4; } /* Light Sea Green */
-
-/* Ensure text color for light backgrounds */
-.rec-bg-1 h3, .rec-bg-1 p, .rec-bg-1 ul li { color: black; }
-.rec-bg-2 h3, .rec-bg-2 p, .rec-bg-2 ul li { color: black; }
-.rec-bg-3 h3, .rec-bg-3 p, .rec-bg-3 ul li { color: black; }
-.rec-bg-4 h3, .rec-bg-4 p, .rec-bg-4 ul li { color: black; }
-.rec-bg-5 h3, .rec-bg-5 p, .rec-bg-5 ul li { color: black; }
-.rec-bg-6 h3, .rec-bg-6 p, .rec-bg-6 ul li { color: black; }
-
-.recommendation-item:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-}
-
-/* Errors Section - No Hover Color Change */
-.error-list {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.error-item {
-    background-color: white;
-    border: 2px dashed var(--primary-pink);
-    padding: 20px;
-    border-radius: 15px;
-    display: flex;
-    align-items: flex-start;
-    gap: 15px;
-    box-shadow: 0 4px 10px rgba(255,102,178,0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-}
-
-.error-item:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-    border-color: red;
-    background-color: #ff7a7a;
-    /* No background-color or text color change */
-}
-
-/* Resources Section - Buttons */
-.resource-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
-    text-align: center;
-}
-
-.resource-item {
-    background-color: var(--white);
-    padding: 25px;
-    border-radius: 20px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.resource-item img {
-    margin-bottom: 15px;
-}
-.resource-item h3 {
-    margin-bottom: 10px;
-}
-.resource-item p {
-    flex-grow: 1;
-    margin-bottom: 20px;
-}
-
-.resource-item:hover {
-    background-color: var(--hover-bg-dark);
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-}
-.resource-item:hover h3,
-.resource-item:hover p {
-    color: var(--hover-text-light);
-}
-
-
-.resource-btn {
-    background-color: var(--accent-yellow);
-    color: var(--dark-purple);
-    padding: 10px 20px;
-    border-radius: 25px;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 0.9em;
-    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-    display: inline-block;
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-.resource-btn:hover {
-    background-color: #FFC400;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-}
-
-/* Checklist Section */
-.checklist {
-    background-color: var(--soft-blue);
-}
-
-.checklist-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
-}
-
-.checklist-category {
-    background-color: var(--white);
-    padding: 30px;
-    border-radius: 20px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    border-right: 8px solid;
-}
-
-.checklist-category.category-tech { border-right-color: var(--primary-blue); }
-.checklist-category.category-pedagogical { border-right-color: var(--primary-pink); }
-.checklist-category.category-design { border-right-color: var(--green-accent); }
-.checklist-category.category-interactivity { border-right-color: var(--accent-yellow); }
-.checklist-category.category-content { border-right-color: var(--dark-purple); }
-.checklist-category.category-additional { border-right-color: var(--primary-blue); }
-
-.checklist-category h3 {
-    font-size: 1.6em;
-    color: var(--dark-purple);
-    margin-bottom: 20px;
-}
-
-.checklist-category ol {
-    list-style: none;
-    padding-left: 0;
-    counter-reset: checklist-counter;
-}
-
-.checklist-category ol li {
-    font-size: 1.1em;
-    margin-bottom: 12px;
-    position: relative;
-    padding-left: 50px;
-    color: #444;
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
-
-.checklist-category ol li:hover {
-    color: var(--dark-purple);
-}
-
-.checklist-category ol li::before {
-    counter-increment: checklist-counter;
-    content: counter(checklist-counter);
-    position: absolute;
-    left: 0;
-    top: -4px;
-    background-color: var(--checklist-number-bg);
-    color: var(--checklist-number-text);
-    width: 35px;
-    height: 35px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 0.9em;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-/* Checklist item checked state */
-.checklist-item.checked {
-    color: #888;
-    text-decoration: line-through;
-    opacity: 0.7;
-}
-
-.checklist-item.checked::before {
-    content: '✔';
-    background-color: var(--green-accent);
-    color: var(--white);
-    font-size: 1.2em;
-    transform: scale(1.1);
-}
-
-/* Success Criteria Section - Color Refinement */
-.success-criteria {
-    background-color: var(--soft-green-bg);
-    padding: 60px 0;
-    text-align: center;
-    border-top-left-radius: 80px;
-    border-top-right-radius: 80px;
-    margin-top: 60px;
-    color: var(--dark-purple);
-    position: relative;
-    z-index: 1;
-}
-
-.success-criteria h2 {
-    font-size: 2.5em;
-    margin-bottom: 40px;
-    color: var(--dark-purple);
-}
-
-.success-points {
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-    max-width: 900px;
-    margin: 0 auto 50px;
-    text-align: left;
-}
-
-.success-item {
-    background-color: rgba(255, 255, 255, 0.5);
-    background-color: var(--soft-green-bg);
-    padding: 20px 30px;
-    border-radius: 20px;
-    border-left: 5px solid var(--success-border-color);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-.success-item:hover {
-    background-color: rgba(255, 255, 255, 0.7);
-    transform: translateY(-5px);
-}
-
-.success-item p {
-    font-size: 1.15em;
-    line-height: 1.6;
-    color: var(--dark-purple);
-    opacity: 0.95;
-}
-
-.universal-success {
-    background-color: rgba(255, 255, 255, 0.6);
-    padding: 30px;
-    border-radius: 25px;
-    max-width: 900px;
-    margin: 0 auto 40px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-    border: 2px dashed var(--success-border-color);
-}
-
-.universal-success p {
-    font-size: 1.2em;
-    font-weight: bold;
-    color: var(--dark-purple);
-    margin-bottom: 20px;
-}
-
-.universal-success ul {
-    list-style: none;
-    padding-left: 0;
-}
-
-.universal-success ul li {
-    font-size: 1.1em;
-    color: var(--dark-purple);
-    margin-bottom: 10px;
-    position: relative;
-    padding-left: 30px;
-}
-
-.universal-success ul li::before {
-    content: '👉';
-    position: absolute;
-    left: 0;
-    font-size: 1.2em;
-    top: 0;
-}
-
-/* Removed download button styling */
-
-/* Main Principle Section (New Design) */
-.main-principle-section {
-    background: linear-gradient(45deg, var(--dark-purple), #8A2BE2); /* Deep purple to blue-violet gradient */
-    color: var(--white);
-    padding: 80px 0;
-    margin-top: 60px;
-    border-top-left-radius: 100px;
-    border-bottom-right-radius: 100px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 -10px 30px rgba(0,0,0,0.2);
-}
-
-.main-principle-block {
-    max-width: 900px;
-    margin: 0 auto;
-    background-color: rgba(255, 255, 255, 0.15); /* Slightly more transparent white */
-    padding: 50px; /* More padding */
-    border-radius: 40px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    backdrop-filter: blur(8px); /* Stronger blur */
-    border: 1px solid rgba(255,255,255,0.3); /* Subtle white border */
-}
-
-.main-principle-block h2 {
-    color: var(--white);
-    font-size: 3em;
-    margin-bottom: 30px;
-    text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
-}
-
-.main-principle-block p {
-    font-size: 1.4em; /* Larger text */
-    line-height: 1.8;
-    color: var(--white);
-    opacity: 0.95;
-    font-weight: 300;
-}
-
-/* Footer */
-.footer {
-    background-color: var(--dark-purple);
-    color: var(--white);
-    padding: 15px 0; /* Уменьшаем вертикальный отступ */
-    text-align: center;
-    margin-top: 50px;
-    font-size: 0.9em;
-}
-
-.footer p {
-    font-size: 0.9em;
-    opacity: 0.9; /* Slightly less opaque to match new color */
-    color: var(--#d3fc5d);
-}
-
-/* Responsive adjustments */
-@media (max-width: 1024px) {
-    .header .nav ul {
-        margin-right: 15px;
+        // Добавляем слушатели событий на каждую карточку этапа
+        stepCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const step = card.dataset.step; // Получаем номер этапа из data-атрибута
+                showStepInfo(step); // Вызываем функцию отображения информации
+            });
+        });
+
+        // Показываем информацию для первого этапа при загрузке страницы
+        window.addEventListener('DOMContentLoaded', () => {
+            showStepInfo(1);
+        });
+document.addEventListener('DOMContentLoaded', () => {
+    // Checklist interactivity
+    const checklistItems = document.querySelectorAll('.checklist-item');
+
+    checklistItems.forEach(item => {
+        item.addEventListener('click', () => {
+            item.classList.toggle('checked');
+            const isChecked = item.classList.contains('checked');
+            item.setAttribute('data-checked', isChecked);
+        });
+    });
+
+    // Collapsible Navigation
+    const header = document.querySelector('.header');
+    const heroSection = document.querySelector('.hero');
+    let heroHeight = heroSection.offsetHeight; // Get initial height of hero section
+
+    // Use a debounce function for scroll to optimize performance
+    let scrollTimeout;
+    window.addEventListener('scroll', () => {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+            if (window.scrollY > heroHeight / 2) { // When scrolled past half of hero section
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        }, 50); // Debounce time in ms
+    });
+
+    // Update heroHeight if window is resized (e.g., orientation change)
+    window.addEventListener('resize', () => {
+        heroHeight = heroSection.offsetHeight;
+        // Also trigger scroll check on resize
+        if (window.scrollY > heroHeight / 2) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
+
+    // Initial check in case user loads page already scrolled
+    if (window.scrollY > heroHeight / 2) {
+        header.classList.add('scrolled');
     }
-    .header .nav ul li {
-        margin-left: 15px;
-    }
-    .header .site-title a {
-        font-size: 18px; /* Further adjust for smaller screens */
-        padding: 6px 12px;
-        margin-right: 10px;
-    }
-    .hero h1 {
-        font-size: 3em;
-    }
-    .hero .subtitle {
-        font-size: 1.4em;
-    }
-    .hero-intro-card {
-        width: 90%;
-        padding: 30px;
-        transform: translateY(40px) rotate(0deg); /* No tilt on tablets */
-    }
-    .hero-intro-card:hover {
-        transform: translateY(40px) rotate(0deg);
-    }
-    .content-section h2 {
-        font-size: 1em;
-    }
-    .techniques-grid {
-        grid-template-columns: 1fr;
-    }
-    .technique-box {
-        min-width: unset;
-        width: 90%; /* Take more width */
-        margin: 0 auto;
-    }
-    .checklist-grid, .recommendations-grid {
-        grid-template-columns: 1fr;
-    }
-    .principles.accent-section {
-        padding: 60px 0;
-    }
-    .principles.accent-section h2 {
-        font-size: 1em;
-    }
-    .main-principle-block h2 {
-        font-size: 1em;
-    }
-    .main-principle-block p {
-        font-size: 1.2em;
-    }
-}
-
-@media (max-width: 768px) {
-    .header .nav {
-        display: none; /* Hide navigation on small screens */
-    }
-    .header .container {
-        justify-content: center;
-    }
-.techniques-grid {
-        grid-template-columns: 1fr;
-    }
-    .technique-box {
-        min-width: unset;
-        width: 90%; /* Take more width */
-        margin: 0 auto;
-    }
-    .header .site-title a {
-        font-size: 22px; /* Center title */
-        padding: 8px 15px;
-        margin-right: 0;
-    }
-    .header.scrolled .site-title a {
-        font-size: 18px;
-    }
-    .hero {
-        padding: 60px 0 100px;
-    }
-    .hero h1 {
-        font-size: 2.5em;
-    }
-    .hero .subtitle {
-        font-size: 1.2em;
-    }
-    /* Hide some hero background elements on small screens for performance/simplicity */
-    .hero::before, .hero::after,
-    .hero .container::before, .hero .container::after {
-        display: none;
-    }
-    .hero-intro-card {
-        padding: 25px;
-        transform: translateY(40px) rotate(0deg);
-    }
-    .hero-intro-card:hover {
-        transform: translateY(40px) rotate(0deg);
-    }
-    .content-section {
-        padding: 40px 0;
-        margin-top: 30px;
-    }
-    .content-section h2 {
-        font-size: 2em;
-        margin-bottom: 30px;
-    }
-    .principle-item, .resource-item, .step-card {
-        padding: 20px;
-    }
-    .error-item {
-        flex-direction: column;
-        text-align: center;
-        align-items: center;
-    }
-    .error-item .error-icon {
-        margin-bottom: 10px;
-    }
-    .success-criteria {
-        padding: 40px 0;
-        border-top-left-radius: 40px;
-        border-top-right-radius: 40px;
-    }
-    .success-criteria h2 {
-        font-size: 2em;
-    }
-    .main-principle-section {
-        padding: 40px 0;
-        border-top-left-radius: 50px;
-        border-bottom-right-radius: 50px;
-    }
-    .main-principle-block {
-        padding: 25px;
-    }
-    .main-principle-block h2 {
-        font-size: 2em;
-    }
-    .main-principle-block p {
-        font-size: 1em;
-    }
-    .footer {
-        padding-top: 60px;
-        margin-top: -60px;
-    }
-}
+});
