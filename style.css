@@ -1214,6 +1214,8 @@ margin-top:-90px;
     .content-section h2 {
         font-size: 1em;
     }
+	.main-principle-block p {
+        font-size: 2em;}
     .techniques-grid {
         grid-template-columns: 1fr;
     }
@@ -1312,10 +1314,11 @@ margin-top:-90px;
     .main-principle-block {
         padding: 25px;
     }
-    }
     .main-principle-block p {
         font-size: 1em;
     }
+	.main-principle-block h2 {
+        font-size: 2em;}
     .footer {
         padding-top: 60px;
         margin-top: -60px;
